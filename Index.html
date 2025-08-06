@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وزارة العدل - أولد سيتي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-brown: #8B4513;
+            --dark-brown: #654321;
+            --light-brown: #D2B48C;
+            --cream: #F5F5DC;
+            --white: #FFFFFF;
+            --text-dark: #2D2D2D;
+            --text-light: #666666;
+            --border-color: #E0E0E0;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', Arial, sans-serif;
+        }
+        
+        body {
+            background: var(--white);
+            color: var(--text-dark);
+            direction: rtl;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-brown), var(--dark-brown));
+            color: var(--white);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .logo:hover {
+            transform: translateY(-3px);
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            color: var(--primary-brown);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: transform 0.5s;
+        }
+        
+        .logo-icon:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        .title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .nav {
+            background: var(--cream);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary-brown);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section {
+            display: none;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .section-title {
+            color: var(--primary-brown);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-brown);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 100px;
+            height: 3px;
+            background: var(--primary-brown);
+        }
+        
+        .welcome-card {
+            background: var(--cream);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-right: 4px solid var(--primary-brown);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(139, 69, 19, 0.05)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+            background-size: cover;
+            z-index: 0;
+        }
+        
+        .welcome-card h3 {
+            position: relative;
+            z-index: 1;
+            color: var(--primary-brown);
+        }
+        
+        .welcome-card p {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .service-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-brown);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-brown);
+        }
+        
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-brown);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover .service-icon {
+            transform: rotate(15deg) scale(1.1);
+            background: var(--dark-brown);
+        }
+        
+        .form-container {
+            background: var(--cream);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-btn {
+            background: var(--primary-brown);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-btn:hover {
+            background: var(--dark-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .sheet-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .sheet-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .law-item {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .law-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        .law-header {
+            background: var(--primary-brown);
+            color: var(--white);
+            padding: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .law-header::after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            transition: transform 0.3s ease;
+        }
+        
+        .law-item.active .law-header::after {
+            transform: rotate(180deg);
+        }
+        
+        .law-content {
+            padding: 0;
+            background: var(--cream);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .law-item.active .law-content {
+            padding: 1.5rem;
+            max-height: 1000px;
+        }
+        
+        .team-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .team-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            width: 280px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-brown);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .team-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .team-avatar-container {
+            position: relative;
+            margin: 0 auto 1.5rem;
+            width: 150px;
+            height: 150px;
+        }
+        
+        .team-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            z-index: 2;
+            border: 5px solid var(--cream);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .team-card:hover .team-avatar {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .avatar-border {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: var(--primary-brown);
+            border-radius: 50%;
+            z-index: 1;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        
+        .team-info {
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .team-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .team-card:hover .team-name {
+            color: var(--dark-brown);
+        }
+        
+        .team-role {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 5px;
+            border: 1px solid #c3e6cb;
+            margin-bottom: 1rem;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .sheet-container {
+                height: 400px;
+            }
+            
+            .nav-content {
+                justify-content: center;
+            }
+            
+            .nav-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .team-card {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .welcome-card {
+                padding: 1.5rem;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                justify-content: center;
+                margin-bottom: 0.5rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-avatar-container {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-balance-scale"></i></div>
+                <div>
+                    <div class="title">وزارة العدل</div>
+                    <div class="subtitle">دولة أولد سيتي</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="nav-content" id="navContent">
+            <button class="nav-btn active" onclick="showSection('home', this)"><i class="fas fa-home"></i> الرئيسية</button>
+            <button class="nav-btn" onclick="showSection('ministryTable', this)"><i class="fas fa-table"></i> جدول الوزارة</button>
+            <button class="nav-btn" onclick="showSection('laws', this)"><i class="fas fa-gavel"></i> القوانين</button>
+            <button class="nav-btn" onclick="showSection('apply', this)"><i class="fas fa-user-plus"></i> طلب تقديم</button>
+            <button class="nav-btn" onclick="showSection('case', this)"><i class="fas fa-file-alt"></i> طلب قضية</button>
+            <button class="nav-btn" onclick="showSection('crew', this)"><i class="fas fa-users"></i> الطاقم</button>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <section id="home" class="section active">
+            <h2 class="section-title">مرحباً بكم في وزارة العدل</h2>
+            <div class="welcome-card">
+                <h3>نحن نخدم العدالة</h3>
+                <p>وزارة العدل في دولة أولد سيتي تعمل على تطبيق القانون وحماية حقوق المواطنين من خلال أنظمة متطورة وشفافة.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" onclick="showSection('ministryTable')">
+                    <div class="service-icon"><i class="fas fa-table"></i></div>
+                    <h4>جدول الوزارة</h4>
+                    <p>عرض هيكل الوزارة ومسؤوليات كل قسم</p>
+                </div>
+                <div class="service-card" onclick="showSection('laws')">
+                    <div class="service-icon"><i class="fas fa-gavel"></i></div>
+                    <h4>القوانين</h4>
+                    <p>استعراض جميع القوانين واللوائح المعمول بها</p>
+                </div>
+                <div class="service-card" onclick="showSection('apply')">
+                    <div class="service-icon"><i class="fas fa-user-plus"></i></div>
+                    <h4>التقديم</h4>
+                    <p>تقديم طلب للانضمام إلى فريق الوزارة</p>
+                </div>
+                <div class="service-card" onclick="showSection('case')">
+                    <div class="service-icon"><i class="fas fa-file-alt"></i></div>
+                    <h4>القضايا</h4>
+                    <p>تقديم طلب لفتح قضية جديدة</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ministryTable" class="section">
+            <h2 class="section-title">جدول الوزارة</h2>
+            <div class="sheet-container">
+                <iframe 
+                    class="sheet-iframe" 
+                    src="https://docs.google.com/spreadsheets/d/1On3H1Kp2qe2fDhkT8gZHo8wCjG_OJt3kZxvKpUqgd9I/edit?usp=drivesdk&rm=minimal&single=true&widget=false&headers=false" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </section>
+
+        <section id="laws" class="section">
+            <h2 class="section-title">القوانين واللوائح</h2>
+            
+          <!-- المادة 1 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 1: آداب المحكمة
+            </div>
+            <div class="law-content">
+              <p>على جميع الحضور الالتزام بالهدوء والصمت داخل قاعة المحكمة. لا يسمح لأي شخص بالتدخل في الجلسة إلا إذا كان هناك طلب مسبق بالتحدث من قبل المحامي الادعاء أو الدفاع.</p>
+            </div>
+          </div>
+          
+          <!-- المادة 2 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 2: تقديم الطلبات
+            </div>
+            <div class="law-content">
+              <p>يجب تقديم جميع الطلبات والمستندات القانونية خلال أوقات الدوام الرسمي من الساعة 8 صباحاً حتى 3 مساءً.</p>
+            </div>
+          </div>
+
+          <!-- المادة 3 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 3: حقوق المتهمين
+            </div>
+            <div class="law-content">
+              <p>لكل متهم الحق في:</p>
+              <ul>
+                <li>معرفة التهم الموجهة إليه</li>
+                <li>توكيل محام للدفاع عنه</li>
+                <li>الاستئناف خلال 15 يوماً من صدور الحكم</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- المادة 4 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 4: جلسات المحكمة
+            </div>
+            <div class="law-content">
+              <p>تعقد جلسات المحكمة العلنية يومياً من الأحد إلى الخميس، وتكون الجلسات السرية بموافقة رئيس المحكمة.</p>
+            </div>
+          </div>
+
+          <!-- المادة 5 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 5: السجلات القضائية
+            </div>
+            <div class="law-content">
+              <p>تحفظ جميع السجلات القضائية لمدة 10 سنوات، ويمكن الاطلاع عليها بموافقة كتابية من رئيس المحكمة.</p>
+            </div>
+          </div>
+
+          <!-- المادة 6 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 6: أحكام الطوارئ
+            </div>
+            <div class="law-content">
+              <p>لرئيس المحكمة صلاحية إصدار أحكام استثنائية في حالات الطوارئ بعد موافقة وزير العدل.</p>
+            </div>
+          </div>
+
+          <!-- المادة 7 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 7: المحامين المعتمدين
+            </div>
+            <div class="law-content">
+              <p>يشترط في المحامي الممارس:</p>
+              <ul>
+                <li>أن يكون حاصلاً على ترخيص مزاولة المهنة</li>
+                <li>ألا يقل عمره عن 17 سنة</li>
+                <li>أن يكون حسن السيرة والسلوك</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- المادة 8 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 8: تنفيذ الأحكام
+            </div>
+            <div class="law-content">
+              <p>تنفذ الأحكام النهائية خلال مدة لا تتجاوز 30 يوماً من تاريخ صدورها، ما لم يكن هناك طعن قانوني.</p>
+            </div>
+          </div>
+
+          <!-- المادة 9 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 9: الطلبات العسكرية
+            </div>
+            <div class="law-content">
+              <p>يحق لضباط المركز طلب أمر مداهمة وتفتيش ممتلكات خاصة للمواطن من المحكمة إذا كانت التهمة على المواطن:</p>
+              <ul>
+                <li>خطف عسكري أو سرقة عتاد عسكري</li>
+                <li>زعزعة أمن قومي (الإرهاب)</li>
+                <li>تجارة أسلحة النارية والخفيفة والثقيلة</li>
+                <li>تجارة الممنوعات</li>
+                <li>إساءة والتشهير في برامج التواصل الاجتماعي</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- المادة 10 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 10: الطلبات التجارية والمدنية
+            </div>
+            <div class="law-content">
+              <p><strong>السجل التجاري:</strong> لكل من يملك تجارة في المدينة يجب عليه استخراج سجل تجاري تجنباً للمحاسبة والمخالفات.</p>
+              <p><strong>التوكيل الخاص والمقيد:</strong> يجب على التاجر توكيل محامي للأمور الإدارية والقانونية والتنفيذية.</p>
+              <p><strong>الضريبة التجارية:</strong> هي إلزام الشركات والأفراد العاملين في الأنشطة التجارية بدفع مبلغ مالي محدد للدولة، وفقًا للقوانين المعمول بها، لدعم الاقتصاد وتمويل الخدمات العامة.</p>
+              <p><strong>شهادة عدم ممانعة:</strong> يحق للمواطن طلب من المحكمة شهادة عدم ممانعة وحذف سجل جنائي بعد ثلاثين يوماً من آخر قضية مسجلة عليه لدى النظام.</p>
+              <p><strong>استثناءات شهادة عدم ممانعة:</strong> لا يحق للمواطن طلب من المحكمة شهادة عدم ممانعة وحذف سجل جنائي إذا كان لديه قضية مسجلة عليه لدى النظام من سرقة البنوك وزعزعة أمن قومي والتحريض.</p>
+              <p><strong>شهادة حسن سيرة وسلوك:</strong> يحق للمواطن طلب شهادة حسن سيرة وسلوك لإجراء يتقدم فيه المواطن للحصول على وثيقة رسمية من الجهات المختصة تُثبت تمتعه بسجل قانوني نظيف وسلوك حسن.</p>
+            </div>
+          </div>
+
+          <!-- المادة 11 -->
+          <div class="law-item">
+            <div class="law-header" onclick="toggleLaw(this.parentElement)">
+              المادة 11: شروط التقديم لرخصة المحاماة
+            </div>
+            <div class="law-content">
+              <ul>
+                <li>التقديم الإلكتروني عن طريق موقع أولد سيتي</li>
+                <li>أن يكون متمتعاً بالأهلية القانونية ومتقمص الشخصية بشكل ممتاز</li>
+                <li>أن يكون المتقدم محمود السيرة وحسن السمعة</li>
+                <li>يجب أن يكون عمر المتقدم للرخصة المحاماة 17 سنة فما فوق</li>
+                <li>يجب أن يكون جودة الصوت ممتازة جداً وغير مزعجة</li>
+                <li>يجب تغيير ملامح الوجه كاملاً غير الوجه الافتراضي</li>
+                <li>يجب إحضار الشهادات والسيرة الذاتية للمقابلات الشخصية بما يتماشى مع الرول (إن وجد)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="apply" class="section">
+            <h2 class="section-title">طلب تقديم</h2>
+            <div id="applySuccess" class="success-message">تم إرسال طلبك بنجاح!</div>
+            <div class="form-container">
+                <form id="applyForm">
+                    <div class="form-group">
+                        <label class="form-label">اسمك في الدسكورد</label>
+                        <input type="text" name="discordName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">اسمك في اللعبة</label>
+                        <input type="text" name="gameName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">عمرك</label>
+                        <input type="number" name="age" class="form-input" required min="17">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">سبب تقديمك</label>
+                        <textarea name="reason" class="form-textarea" required placeholder="لماذا ترغب في الانضمام إلى وزارة العدل؟"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">خبراتك</label>
+                        <textarea name="experience" class="form-textarea" required placeholder="ما هي خبراتك السابقة في المجال القضائي أو القانوني؟"></textarea>
+                    </div>
+                    <button type="submit" class="form-btn"><i class="fas fa-paper-plane"></i> إرسال الطلب</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="case" class="section">
+            <h2 class="section-title">طلب فتح قضية</h2>
+            <div id="caseSuccess" class="success-message">تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 48 ساعة.</div>
+            <div class="form-container">
+                <form id="caseForm">
+                    <div class="form-group">
+                        <label class="form-label">الاسم الكامل</label>
+                        <input type="text" name="fullName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الايدي</label>
+                        <input type="text" name="id" class="form-input" required placeholder="رقم الهوية أو اللاعب">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">نوع القضية</label>
+                        <select name="caseType" class="form-select" required>
+                            <option value="">اختر نوع القضية</option>
+                            <option value="سرقة">سرقة</option>
+                            <option value="قتل">قتل</option>
+                            <option value="احتيال">احتيال</option>
+                            <option value="نزاع عقاري">نزاع عقاري</option>
+                            <option value="مخالفات مرورية">مخالفات مرورية</option>
+                            <option value="آخر">آخر</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">تفاصيل القضية</label>
+                        <textarea name="details" class="form-textarea" required placeholder="صف القضية بتفاصيل كاملة"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الصور / الفيديو (رابط)</label>
+                        <input type="text" name="media" class="form-input" placeholder="رابط الصور أو الفيديو إن وجد">
+                    </div>
+                    <button type="submit" class="form-btn"><i class="fas fa-gavel"></i> تقديم القضية</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="crew" class="section">
+            <h2 class="section-title">طاقم الوزارة</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar-container">
+                        <div class="team-avatar" style="background-image: url('https://i.imgur.com/J6l19lO.jpg')"></div>
+                        <div class="avatar-border"></div>
+                    </div>
+                    <div class="team-info">
+                        <div class="team-name">رضى الهدالي</div>
+                        <div class="team-role">وزير العدل</div>
+                    </div>
+                </div>
+                
+                <div class="team-card">
+                    <div class="team-avatar-container">
+                        <div class="team-avatar" style="background-image: url('https://i.imgur.com/mW5hQqD.jpg')"></div>
+                        <div class="avatar-border"></div>
+                    </div>
+                    <div class="team-info">
+                        <div class="team-name">أحمد السليم</div>
+                        <div class="team-role">نائب الوزير</div>
+                    </div>
+                </div>
+                
+                <div class="team-card">
+                    <div class="team-avatar-container">
+                        <div class="team-avatar" style="background-image: url('https://i.imgur.com/kL5qVYX.jpg')"></div>
+                        <div class="avatar-border"></div>
+                    </div>
+                    <div class="team-info">
+                        <div class="team-name">نورا الفهد</div>
+                        <div class="team-role">رئيسة المحكمة العليا</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // تبديل الأقسام
+        function showSection(id, btn = null) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            if (btn) {
+                btn.classList.add('active');
+            } else {
+                const navBtn = document.querySelector(`.nav-btn[onclick*="${id}"]`);
+                if (navBtn) navBtn.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // تبديل فتح/غلق مواد القانون
+        function toggleLaw(lawItem) {
+            lawItem.classList.toggle('active');
+        }
+
+        // معالجة نموذج التقديم
+        document.getElementById('applyForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                content: "**طلب تقديم جديد**",
+                embeds: [{
+                    title: "تفاصيل الطلب",
+                    fields: [
+                        { name: "اسم الدسكورد", value: formData.get('discordName'), inline: true },
+                        { name: "اسم اللعبة", value: formData.get('gameName'), inline: true },
+                        { name: "العمر", value: formData.get('age'), inline: true },
+                        { name: "سبب التقديم", value: formData.get('reason') },
+                        { name: "الخبرات", value: formData.get('experience') }
+                    ],
+                    color: 0x8B4513,
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            // هنا سيتم إرسال البيانات إلى الويب هوك
+            // هذا مثال للتوضيح فقط
+            console.log("Application Data:", data);
+            
+            document.getElementById('applySuccess').style.display = 'block';
+            this.reset();
+            
+            setTimeout(() => {
+                document.getElementById('applySuccess').style.display = 'none';
+            }, 5000);
+        });
+
+        // معالجة نموذج القضية
+        document.getElementById('caseForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                content: "**طلب قضية جديد**",
+                embeds: [{
+                    title: "تفاصيل القضية",
+                    fields: [
+                        { name: "الاسم", value: formData.get('fullName'), inline: true },
+                        { name: "الايدي", value: formData.get('id'), inline: true },
+                        { name: "نوع القضية", value: formData.get('caseType'), inline: true },
+                        { name: "التفاصيل", value: formData.get('details') },
+                        { name: "المرفقات", value: formData.get('media') || "لا يوجد" }
+                    ],
+                    color: 0x8B4513,
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            // هنا سيتم إرسال البيانات إلى الويب هوك
+            // هذا مثال للتوضيح فقط
+            console.log("Case Data:", data);
+            
+            document.getElementById('caseSuccess').style.display = 'block';
+            this.reset();
+            
+            setTimeout(() => {
+                document.getElementById('caseSuccess').style.display = 'none';
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
