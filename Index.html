@@ -108,6 +108,7 @@
             <button class="nav-btn" onclick="showSection('laws', this)"><i class="fas fa-gavel"></i> القوانين</button>
             <button class="nav-btn" onclick="showSection('apply', this)"><i class="fas fa-user-plus"></i> طلب تقديم</button>
             <button class="nav-btn" onclick="showSection('case', this)"><i class="fas fa-file-alt"></i> طلب قضية</button>
+            <button class="nav-btn" onclick="showSection('suggestions', this)"><i class="fas fa-lightbulb"></i> الاقتراحات</button>
             <button class="nav-btn" onclick="showSection('crew', this)"><i class="fas fa-users"></i> الطاقم</button>
         </div>
     </nav>
@@ -139,6 +140,11 @@
                     <div class="service-icon"><i class="fas fa-file-alt"></i></div>
                     <h4>القضايا</h4>
                     <p>تقديم طلب لفتح قضية جديدة</p>
+                </div>
+                <div class="service-card" onclick="showSection('suggestions')">
+                    <div class="service-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h4>الاقتراحات</h4>
+                    <p>شاركنا أفكارك لتحسين الخدمات</p>
                 </div>
             </div>
         </section>
@@ -313,7 +319,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">خبراتك</label>
-                        <textarea name="experience" class="form-textarea" required placeholder="ما هي خبراتك السابقة في المجال القضائي أو القانوني؟"></textarea>
+                        <textarea name="experience" class="form-textarea" required placeholder="ما هي خبراتك السابقة في المجال القضائي أو القانوني？"></textarea>
                     </div>
                     <button type="submit" class="form-btn"><i class="fas fa-paper-plane"></i> إرسال الطلب</button>
                 </form>
@@ -359,7 +365,41 @@
             </div>
         </section>
 
-  <section id="crew" class="section">
+        <section id="suggestions" class="section">
+            <h2 class="section-title">صندوق الاقتراحات</h2>
+            <div id="suggestionSuccess" class="success-message"></div>
+            <div id="suggestionError" class="error-message"></div>
+            <div class="form-container">
+                <form id="suggestionForm">
+                    <div class="form-group">
+                        <label class="form-label">اسمك</label>
+                        <input type="text" name="name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">جهة الاتصال (دسكورد أو أي وسيلة أخرى)</label>
+                        <input type="text" name="contact" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">نوع الاقتراح</label>
+                        <select name="suggestionType" class="form-select" required>
+                            <option value="">اختر نوع الاقتراح</option>
+                            <option value="تحسين الخدمات">تحسين الخدمات</option>
+                            <option value="تعديل القوانين">تعديل القوانين</option>
+                            <option value="مشكلة تواجهها">مشكلة تواجهها</option>
+                            <option value="فكرة جديدة">فكرة جديدة</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الاقتراح</label>
+                        <textarea name="suggestion" class="form-textarea" required placeholder="شاركنا اقتراحك أو فكرتك بالتفصيل"></textarea>
+                    </div>
+                    <button type="submit" class="form-btn"><i class="fas fa-lightbulb"></i> إرسال الاقتراح</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="crew" class="section">
             <h2 class="section-title">طاقم الوزارة</h2>
             <div class="team-grid">
                 <div class="team-card">
@@ -375,7 +415,6 @@
             </div>
         </section>
     </main>
-
 
     <script>
         // تبديل الأقسام
@@ -488,6 +527,46 @@
                 setTimeout(() => {
                     document.getElementById('caseSuccess').style.display = 'none';
                     document.getElementById('caseError').style.display = 'none';
+                }, 5000);
+            });
+        });
+
+        // معالجة نموذج الاقتراحات مع التأكيد والرسائل
+        document.getElementById('suggestionForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            document.getElementById('suggestionSuccess').style.display = 'none';
+            document.getElementById('suggestionError').style.display = 'none';
+            if (!confirm('هل أنت متأكد من صحة جميع البيانات قبل الإرسال؟')) return;
+            const formData = new FormData(this);
+            const data = {
+                content: "**اقتراح جديد**",
+                embeds: [{
+                    title: "تفاصيل الاقتراح",
+                    fields: [
+                        { name: "الاسم", value: formData.get('name'), inline: true },
+                        { name: "طريقة التواصل", value: formData.get('contact'), inline: true },
+                        { name: "نوع الاقتراح", value: formData.get('suggestionType'), inline: true },
+                        { name: "الاقتراح", value: formData.get('suggestion') }
+                    ],
+                    color: 0x3498db,
+                    timestamp: new Date().toISOString()
+                }]
+            };
+            fetch('https://discord.com/api/webhooks/1412160985187352687/IOEQ1j5TE8lLnp3jf8rsI3wlOJCfrEFl3EnElHfvQHoS-Dq1t4qoXBMvv7uX5Cy4LMPX', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(res => {
+                document.getElementById('suggestionSuccess').style.display = 'block';
+                document.getElementById('suggestionSuccess').innerText = 'تم إرسال اقتراحك بنجاح! شكراً لمشاركتك أفكارك.';
+                this.reset();
+            }).catch(err => {
+                document.getElementById('suggestionError').style.display = 'block';
+                document.getElementById('suggestionError').innerText = 'حدث خطأ أثناء إرسال الاقتراح، حاول مجددًا.';
+            }).finally(() => {
+                setTimeout(() => {
+                    document.getElementById('suggestionSuccess').style.display = 'none';
+                    document.getElementById('suggestionError').style.display = 'none';
                 }, 5000);
             });
         });
