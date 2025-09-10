@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -8,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* أنماط CSS الكاملة هنا (نفس الأنماط السابقة) */
         :root {
             --primary-brown: #8B4513;
             --dark-brown: #654321;
@@ -84,6 +84,27 @@
         .team-role {color:var(--text-light);font-size:1.1rem;}
         .success-message {background:#d4edda;color:#155724;padding:1rem;border-radius:5px;border:1px solid #c3e6cb;margin-bottom:1rem;display:none;animation:fadeIn 0.5s ease;}
         .error-message {background:#f8d7da;color:#721c24;padding:1rem;border-radius:5px;border:1px solid #f5c6cb;margin-bottom:1rem;display:none;animation:fadeIn 0.5s ease;}
+        
+        /* أنماط جديدة للإعلانات */
+        .announcements-section {margin-top: 2rem;}
+        .announcement-card {background: linear-gradient(to right, #f8f9fa, #e9ecef);border-right: 4px solid var(--primary-brown);border-radius: 8px;padding: 1.5rem;margin-bottom: 1.5rem;box-shadow: var(--shadow);}
+        .announcement-title {color: var(--primary-brown);font-size: 1.4rem;margin-bottom: 0.5rem;}
+        .announcement-date {color: var(--text-light);font-size: 0.9rem;margin-bottom: 1rem;}
+        .announcement-content {color: var(--text-dark);line-height: 1.8;}
+        .no-announcements {text-align: center;padding: 2rem;color: var(--text-light);}
+        
+        /* أنماط لوحة التحكم */
+        .admin-panel {background: #f8f9fa;padding: 1.5rem;border-radius: 8px;margin-top: 1.5rem;border: 1px solid var(--border-color);}
+        .admin-section {display: none;}
+        .admin-section.active {display: block;}
+        .admin-table {width: 100%;border-collapse: collapse;margin: 1rem 0;}
+        .admin-table th, .admin-table td {padding: 0.75rem;text-align: right;border-bottom: 1px solid var(--border-color);}
+        .admin-table th {background-color: var(--primary-brown);color: white;}
+        .admin-table tr:hover {background-color: rgba(139, 69, 19, 0.05);}
+        .delete-btn {color: #dc3545;cursor: pointer;padding: 0.25rem 0.5rem;border-radius: 4px;transition: background 0.3s;}
+        .delete-btn:hover {background: rgba(220, 53, 69, 0.1);}
+        .login-form {max-width: 400px;margin: 2rem auto;padding: 2rem;background: var(--white);border-radius: 8px;box-shadow: var(--shadow);}
+        
         @media (max-width: 768px) {.sheet-container {height:400px;}.nav-content {justify-content:center;}.nav-btn {padding:0.5rem 1rem;font-size:0.85rem;}.team-card {width:100%;max-width:280px;}.section {padding:1.5rem;}.section-title {font-size:1.5rem;}.welcome-card {padding:1.5rem;}.form-container {padding:1.5rem;}}
         @media (max-width: 480px) {.header-content {flex-direction:column;text-align:center;}.logo {justify-content:center;margin-bottom:0.5rem;}.services-grid {grid-template-columns:1fr;}.team-avatar-container {width:120px;height:120px;}}
     </style>
@@ -104,12 +125,14 @@
     <nav class="nav">
         <div class="nav-content" id="navContent">
             <button class="nav-btn active" onclick="showSection('home', this)"><i class="fas fa-home"></i> الرئيسية</button>
+            <button class="nav-btn" onclick="showSection('announcements', this)"><i class="fas fa-bullhorn"></i> الإعلانات</button>
             <button class="nav-btn" onclick="showSection('ministryTable', this)"><i class="fas fa-table"></i> جدول الوزارة</button>
             <button class="nav-btn" onclick="showSection('laws', this)"><i class="fas fa-gavel"></i> القوانين</button>
             <button class="nav-btn" onclick="showSection('apply', this)"><i class="fas fa-user-plus"></i> طلب تقديم</button>
             <button class="nav-btn" onclick="showSection('case', this)"><i class="fas fa-file-alt"></i> طلب قضية</button>
             <button class="nav-btn" onclick="showSection('suggestions', this)"><i class="fas fa-lightbulb"></i> الاقتراحات</button>
             <button class="nav-btn" onclick="showSection('crew', this)"><i class="fas fa-users"></i> الطاقم</button>
+            <button class="nav-btn" id="adminBtn" onclick="showSection('adminPanel', this)"><i class="fas fa-cog"></i> لوحة التحكم</button>
         </div>
     </nav>
 
@@ -120,6 +143,15 @@
                 <h3>نحن نخدم العدالة</h3>
                 <p>وزارة العدل في دولة أولد سيتي تعمل على تطبيق القانون وحماية حقوق المواطنين من خلال أنظمة شفافة.</p>
             </div>
+            
+            <!-- عرض الإعلانات في الصفحة الرئيسية -->
+            <div class="announcements-section">
+                <h3 style="color: var(--primary-brown); margin-bottom: 1rem;">آخر الإعلانات</h3>
+                <div id="homeAnnouncements">
+                    <!-- سيتم تعبئة الإعلانات هنا عبر الجافاسكريبت -->
+                </div>
+            </div>
+            
             <div class="services-grid">
                 <div class="service-card" onclick="showSection('ministryTable')">
                     <div class="service-icon"><i class="fas fa-table"></i></div>
@@ -146,6 +178,19 @@
                     <h4>الاقتراحات</h4>
                     <p>شاركنا أفكارك لتحسين الخدمات</p>
                 </div>
+                <div class="service-card" onclick="showSection('announcements')">
+                    <div class="service-icon"><i class="fas fa-bullhorn"></i></div>
+                    <h4>الإعلانات</h4>
+                    <p>اطلع على آخر إعلانات الوزارة</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم الإعلانات الجديد -->
+        <section id="announcements" class="section">
+            <h2 class="section-title">إعلانات الوزارة</h2>
+            <div id="announcementsList">
+                <!-- سيتم تعبئة الإعلانات هنا عبر الجافاسكريبت -->
             </div>
         </section>
 
@@ -163,6 +208,7 @@
         <section id="laws" class="section">
             <h2 class="section-title">القوانين واللوائح</h2>
             <input id="lawSearch" class="law-search" type="text" placeholder="ابحث في مواد القوانين...">
+            
             <!-- جميع القوانين كما هي في النسخة المعدلة -->
             <!-- المادة 1 -->
             <div class="law-item">
@@ -252,7 +298,7 @@
                     المادة 9: الطلبات العسكرية
                 </div>
                 <div class="law-content">
-                    <p>يحق لضباط المركز طلب أمر مداهمة وتفتيش ممتلكات خاصة للمواطن من المحكمة إذا كانت التهمة على المواطن:</p>
+                    <p>يحق لضباط المركز طلب أمر مداهمة وتفتيش ممتلكات خاصة للمو citoyen من المحكمة إذا كانت التهمة على المو citoyen:</p>
                     <ul>
                         <li>خطف عسكري أو سرقة عتاد عسكري</li>
                         <li>زعزعة أمن قومي (الإرهاب)</li>
@@ -271,9 +317,9 @@
                     <p><strong>السجل التجاري:</strong> لكل من يملك تجارة في المدينة يجب عليه استخراج سجل تجاري تجنباً للمحاسبة والمخالفات.</p>
                     <p><strong>التوكيل الخاص والمقيد:</strong> يجب على التاجر توكيل محامي للأمور الإدارية والقانونية والتنفيذية.</p>
                     <p><strong>الضريبة التجارية:</strong> هي إلزام الشركات والأفراد العاملين في الأنشطة التجارية بدفع مبلغ مالي محدد للدولة، وفقًا للقوانين المعمول بها، لدعم الاقتصاد وتمويل الخدمات العامة.</p>
-                    <p><strong>شهادة عدم ممانعة:</strong> يحق للمواطن طلب من المحكمة شهادة عدم ممانعة وحذف سجل جنائي بعد ثلاثين يوماً من آخر قضية مسجلة عليه لدى النظام.</p>
-                    <p><strong>استثناءات شهادة عدم ممانعة:</strong> لا يحق للمواطن طلب من المحكمة شهادة عدم ممانعة وحذف سجل جنائي إذا كان لديه قضية مسجلة عليه لدى النظام من سرقة البنوك وزعزعة أمن قومي والتحريض.</p>
-                    <p><strong>شهادة حسن سيرة وسلوك:</strong> يحق للمواطن طلب شهادة حسن سيرة وسلوك لإجراء يتقدم فيه المواطن للحصول على وثيقة رسمية من الجهات المختصة تُثبت تمتعه بسجل قانوني نظيف وسلوك حسن.</p>
+                    <p><strong>شهادة عدم ممانعة:</strong> يحق للمو citoyen طلب من المحكمة شهادة عدم ممانعة وحذف سجل جنائي بعد ثلاثين يوماً من آخر قضية مسجلة عليه لدى النظام.</p>
+                    <p><strong>استثناءات شهادة عدم ممانعة:</strong> لا يحق للمو citoyen طلب من المحكمة شهادة عدم ممانعة وحذف سجل جنائي إذا كان لديه قضية مسجلة عليه لدى النظام من سرقة البنوك وزعزعة أمن قومي والتحريض.</p>
+                    <p><strong>شهادة حسن سيرة وسلوك:</strong> يحق للمو citoyen طلب شهادة حسن سيرة وسلوك لإجراء يتقدم فيه المو citoyen للحصول على وثيقة رسمية من الجهات المختصة تُثبت تمتعه بسجل قانوني نظيف وسلوك حسن.</p>
                 </div>
             </div>
             <!-- المادة 11 -->
@@ -414,9 +460,69 @@
                 </div>
             </div>
         </section>
+
+        <!-- لوحة تحكم الإعلانات -->
+        <section id="adminPanel" class="section">
+            <h2 class="section-title">لوحة تحكم الإعلانات</h2>
+            
+            <div id="adminLoginSection" class="admin-section active">
+                <div class="login-form">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary-brown);">تسجيل الدخول</h3>
+                    <div class="form-group">
+                        <label class="form-label">اسم المستخدم</label>
+                        <input type="text" id="adminUsername" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">كلمة المرور</label>
+                        <input type="password" id="adminPassword" class="form-input" required>
+                    </div>
+                    <button type="button" onclick="adminLogin()" class="form-btn" style="width: 100%; justify-content: center;"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+                </div>
+            </div>
+            
+            <div id="adminDashboard" class="admin-section">
+                <div class="admin-panel">
+                    <h3 style="color: var(--primary-brown); margin-bottom: 1rem;">إنشاء إعلان جديد</h3>
+                    <form id="announcementForm">
+                        <div class="form-group">
+                            <label class="form-label">عنوان الإعلان</label>
+                            <input type="text" id="announcementTitle" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">محتوى الإعلان</label>
+                            <textarea id="announcementContent" class="form-textarea" required placeholder="اكتب محتوى الإعلان هنا..."></textarea>
+                        </div>
+                        <button type="submit" class="form-btn"><i class="fas fa-plus"></i> نشر الإعلان</button>
+                    </form>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: var(--primary-brown); margin-bottom: 1rem;">الإعلانات المنشورة</h3>
+                    <div id="adminAnnouncementsList">
+                        <!-- سيتم تعبئة الإعلانات هنا عبر الجافاسكريبت -->
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script>
+        // بيانات الإعلانات (سيتم تخزينها في localStorage)
+        let announcements = JSON.parse(localStorage.getItem('ministry_announcements')) || [];
+        
+        // معلومات تسجيل الدخول (يمكن تغييرها حسب الحاجة)
+        const ADMIN_CREDENTIALS = {
+            username: "reda alhudali",
+            password: "Hhhh//77//" // يجب تغيير هذه الكلمة في البيئة الحقيقية
+        };
+        
+        // تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAnnouncements();
+            // جعل زر لوحة التحكم ظاهراً دائماً
+            document.getElementById('adminBtn').style.display = 'block';
+        });
+        
         // تبديل الأقسام
         function showSection(id, btn = null) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -429,6 +535,11 @@
                 if (navBtn) navBtn.classList.add('active');
             }
             window.scrollTo({top: 0,behavior: 'smooth'});
+            
+            // إذا كان القسم هو الإعلانات، قم بتحديث القائمة
+            if (id === 'announcements' || id === 'home') {
+                loadAnnouncements();
+            }
         }
 
         // تبديل فتح/غلق مواد القانون
@@ -448,6 +559,154 @@
                 }
             });
         });
+        
+        // تحميل وعرض الإعلانات
+        function loadAnnouncements() {
+            const announcementsList = document.getElementById('announcementsList');
+            const homeAnnouncements = document.getElementById('homeAnnouncements');
+            
+            if (announcements.length === 0) {
+                announcementsList.innerHTML = '<div class="no-announcements"><i class="fas fa-bullhorn" style="font-size: 3rem; margin-bottom: 1rem;"></i><p>لا توجد إعلانات حالياً</p></div>';
+                homeAnnouncements.innerHTML = '<div class="no-announcements"><p>لا توجد إعلانات حالياً</p></div>';
+                return;
+            }
+            
+            // عرض الإعلانات في قسم الإعلانات
+            let announcementsHTML = '';
+            announcements.forEach((announcement, index) => {
+                announcementsHTML += `
+                    <div class="announcement-card">
+                        <h3 class="announcement-title">${announcement.title}</h3>
+                        <div class="announcement-date">${new Date(announcement.date).toLocaleDateString('ar-SA')}</div>
+                        <div class="announcement-content">${announcement.content}</div>
+                    </div>
+                `;
+            });
+            announcementsList.innerHTML = announcementsHTML;
+            
+            // عرض آخر إعلانين في الصفحة الرئيسية
+            let homeAnnouncementsHTML = '';
+            const recentAnnouncements = announcements.slice(0, 2);
+            recentAnnouncements.forEach(announcement => {
+                homeAnnouncementsHTML += `
+                    <div class="announcement-card">
+                        <h3 class="announcement-title">${announcement.title}</h3>
+                        <div class="announcement-date">${new Date(announcement.date).toLocaleDateString('ar-SA')}</div>
+                        <div class="announcement-content">${announcement.content}</div>
+                    </div>
+                `;
+            });
+            homeAnnouncements.innerHTML = homeAnnouncementsHTML;
+            
+            // تحديث قائمة الإعلانات في لوحة التحكم إذا كان المدير مسجلاً دخوله
+            if (localStorage.getItem('admin_logged_in') === 'true') {
+                loadAdminAnnouncements();
+            }
+        }
+        
+        // تسجيل دخول المدير
+        function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                localStorage.setItem('admin_logged_in', 'true');
+                checkAdminStatus();
+                document.getElementById('adminLoginSection').classList.remove('active');
+                document.getElementById('adminDashboard').classList.add('active');
+            } else {
+                alert('اسم المستخدم أو كلمة المرور غير صحيحة');
+            }
+        }
+        
+        // التحقق من حالة المدير
+        function checkAdminStatus() {
+            if (localStorage.getItem('admin_logged_in') === 'true') {
+                document.getElementById('adminBtn').style.display = 'block';
+                document.getElementById('adminLoginSection').classList.remove('active');
+                document.getElementById('adminDashboard').classList.add('active');
+                loadAdminAnnouncements();
+            } else {
+                document.getElementById('adminBtn').style.display = 'block'; // جعل الزر ظاهراً دائماً
+                document.getElementById('adminLoginSection').classList.add('active');
+                document.getElementById('adminDashboard').classList.remove('active');
+            }
+        }
+        
+        // تحميل الإعلانات في لوحة التحكم
+        function loadAdminAnnouncements() {
+            const adminList = document.getElementById('adminAnnouncementsList');
+            
+            if (announcements.length === 0) {
+                adminList.innerHTML = '<div class="no-announcements"><p>لا توجد إعلانات حالياً</p></div>';
+                return;
+            }
+            
+            let adminHTML = `
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>العنوان</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            announcements.forEach((announcement, index) => {
+                adminHTML += `
+                    <tr>
+                        <td>${new Date(announcement.date).toLocaleDateString('ar-SA')}</td>
+                        <td>${announcement.title}</td>
+                        <td>
+                            <span class="delete-btn" onclick="deleteAnnouncement(${index})">
+                                <i class="fas fa-trash"></i> حذف
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            adminHTML += `</tbody></table>`;
+            adminList.innerHTML = adminHTML;
+        }
+        
+        // إنشاء إعلان جديد
+        document.getElementById('announcementForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('announcementTitle').value;
+            const content = document.getElementById('announcementContent').value;
+            
+            const newAnnouncement = {
+                title: title,
+                content: content,
+                date: new Date().toISOString()
+            };
+            
+            announcements.unshift(newAnnouncement); // إضافة الإعلان في بداية المصفوفة
+            localStorage.setItem('ministry_announcements', JSON.stringify(announcements));
+            
+            // إعادة تحميل الإعلانات
+            loadAnnouncements();
+            
+            // مسح الحقول
+            document.getElementById('announcementTitle').value = '';
+            document.getElementById('announcementContent').value = '';
+            
+            alert('تم نشر الإعلان بنجاح!');
+        });
+        
+        // حذف إعلان
+        function deleteAnnouncement(index) {
+            if (confirm('هل أنت متأكد من حذف هذا الإعلان؟')) {
+                announcements.splice(index, 1);
+                localStorage.setItem('ministry_announcements', JSON.stringify(announcements));
+                loadAnnouncements();
+                alert('تم حذف الإعلان بنجاح!');
+            }
+        }
 
         // معالجة نموذج التقديم مع التأكيد والرسائل
         document.getElementById('applyForm').addEventListener('submit', function(e){
