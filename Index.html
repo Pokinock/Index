@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* أنماط CSS الكاملة هنا (نفس الأنماط السابقة) */
         :root {
             --primary-brown: #8B4513;
             --dark-brown: #654321;
@@ -319,7 +318,7 @@
                     <p><strong>الضريبة التجارية:</strong> هي إلزام الشركات والأفراد العاملين في الأنشطة التجارية بدفع مبلغ مالي محدد للدولة، وفقًا للقوانين المعمول بها، لدعم الاقتصاد وتمويل الخدمات العامة.</p>
                     <p><strong>شهادة عدم ممانعة:</strong> يحق للمو citoyen طلب من المحكمة شهادة عدم ممانعة وحذف سجل جنائي بعد ثلاثين يوماً من آخر قضية مسجلة عليه لدى النظام.</p>
                     <p><strong>استثناءات شهادة عدم ممانعة:</strong> لا يحق للمو citoyen طلب من المحكمة شهادة عدم ممانعة وحذف سجل جنائي إذا كان لديه قضية مسجلة عليه لدى النظام من سرقة البنوك وزعزعة أمن قومي والتحريض.</p>
-                    <p><strong>شهادة حسن سيرة وسلوك:</strong> يحق للمو citoyen طلب شهادة حسن سيرة وسلوك لإجراء يتقدم فيه المو citoyen للحصول على وثيقة رسمية من الجهات المختصة تُثبت تمتعه بسجل قانوني نظيف وسلوك حسن.</p>
+                    <p><strong>شهادة حسن سيرة وسلوك:</strong> يحق للمو citoyen طلب شاھدة حسن سيرة وسلوك لإجراء يتقدم فيه المو citoyen للحصول على وثيقة رسمية من الجهات المختصة تُثبت تمتعه بسجل قانوني نظيف وسلوك حسن.</p>
                 </div>
             </div>
             <!-- المادة 11 -->
@@ -356,6 +355,10 @@
                         <input type="text" name="gameName" class="form-input" required>
                     </div>
                     <div class="form-group">
+                        <label class="form-label">الرقم داخل اللعبة</label>
+                        <input type="number" name="gameId" class="form-input" required placeholder="أدخل رقمك داخل اللعبة">
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">عمرك</label>
                         <input type="number" name="age" class="form-input" required min="17">
                     </div>
@@ -365,7 +368,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">خبراتك</label>
-                        <textarea name="experience" class="form-textarea" required placeholder="ما هي خبراتك السابقة في المجال القضائي أو القانوني？"></textarea>
+                        <textarea name="experience" class="form-textarea" required placeholder="ما هي خبراتك السابقة في المجال القضائي أو القانوني؟"></textarea>
                     </div>
                     <button type="submit" class="form-btn"><i class="fas fa-paper-plane"></i> إرسال الطلب</button>
                 </form>
@@ -383,8 +386,16 @@
                         <input type="text" name="yourName" class="form-input" required>
                     </div>
                     <div class="form-group">
+                        <label class="form-label">رقمك داخل اللعبة</label>
+                        <input type="number" name="yourGameId" class="form-input" required placeholder="أدخل رقمك داخل اللعبة">
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">اسم المدعى عليه</label>
                         <input type="text" name="defendantName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">رقم المدعى عليه داخل اللعبة</label>
+                        <input type="number" name="defendantGameId" class="form-input" placeholder="أدخل رقم المدعى عليه داخل اللعبة (إن أمكن)">
                     </div>
                     <div class="form-group">
                         <label class="form-label">نوع القضية</label>
@@ -722,6 +733,7 @@
                     fields: [
                         { name: "اسم الدسكورد", value: formData.get('discordName'), inline: true },
                         { name: "اسم اللعبة", value: formData.get('gameName'), inline: true },
+                        { name: "الرقم داخل اللعبة", value: formData.get('gameId'), inline: true },
                         { name: "العمر", value: formData.get('age'), inline: true },
                         { name: "سبب التقديم", value: formData.get('reason') },
                         { name: "الخبرات", value: formData.get('experience') }
@@ -762,7 +774,9 @@
                     title: "تفاصيل القضية",
                     fields: [
                         { name: "اسم مقدم الطلب", value: formData.get('yourName'), inline: true },
+                        { name: "رقم مقدم الطلب داخل اللعبة", value: formData.get('yourGameId'), inline: true },
                         { name: "اسم المدعى عليه", value: formData.get('defendantName'), inline: true },
+                        { name: "رقم المدعى عليه داخل اللعبة", value: formData.get('defendantGameId') || "غير متوفر", inline: true },
                         { name: "نوع القضية", value: formData.get('caseType'), inline: true },
                         { name: "سبب القضية", value: formData.get('caseReason') },
                         { name: "الدلائل", value: formData.get('evidence') }
