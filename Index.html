@@ -10,7 +10,6 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     
     <style>
         :root {
@@ -879,7 +878,7 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         // بيانات تسجيل الدخول الثابتة
@@ -889,13 +888,33 @@
         };
 
         let isAdminLoggedIn = false;
+        let firebaseInitialized = false;
 
         // تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            await initializeFirebase();
             setupEventListeners();
-            loadInitialData();
+            await loadInitialData();
             checkAdminStatus();
         });
+
+        // تهيئة Firebase مع معالجة الأخطاء
+        async function initializeFirebase() {
+            try {
+                // تحقق من اتصال Firebase
+                console.log('جاري تهيئة Firebase...');
+                
+                // محاولة قراءة من Firestore لاختبار الاتصال
+                const testQuery = await db.collection('test').limit(1).get();
+                console.log('Firebase متصل بنجاح!');
+                
+                firebaseInitialized = true;
+                
+            } catch (error) {
+                console.error('خطأ في اتصال Firebase:', error);
+                alert('⚠️ هناك مشكلة في اتصال قاعدة البيانات. بعض الميزات قد لا تعمل.');
+            }
+        }
 
         // إعداد المستمعين للأحداث
         function setupEventListeners() {
@@ -914,10 +933,10 @@
         }
 
         // تحميل البيانات الأولية
-        function loadInitialData() {
-            loadAnnouncements();
-            loadLaws();
-            loadTeam();
+        async function loadInitialData() {
+            await loadAnnouncements();
+            await loadLaws();
+            await loadTeam();
         }
 
         // التحقق من حالة المدير
@@ -946,7 +965,7 @@
                 showAdminDashboard();
                 document.getElementById('adminStatus').style.display = 'flex';
                 
-                alert('تم تسجيل الدخول بنجاح!');
+                showMessage('تم تسجيل الدخول بنجاح!', 'success');
             } else {
                 errorDiv.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
                 errorDiv.style.display = 'block';
@@ -966,26 +985,22 @@
         }
 
         function showAdminTab(tabId) {
-            // إخفاء كل الألسنة
             document.querySelectorAll('#adminDashboard .admin-section').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // إزالة النشاط من كل الأزرار
             document.querySelectorAll('.admin-tab').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            // إظهار اللسان المحدد
             document.getElementById(tabId).classList.add('active');
-            
-            // إضافة النشاط للزر المضغوط
             event.target.classList.add('active');
         }
 
-        // تحميل البيانات للمستخدم العادي من Firebase
+        // تحميل البيانات من Firebase
         async function loadAnnouncements() {
             try {
+                console.log('جاري تحميل الإعلانات...');
                 const snapshot = await db.collection('announcements')
                     .orderBy('date', 'desc')
                     .limit(10)
@@ -999,11 +1014,13 @@
                     });
                 });
                 
+                console.log(`تم تحميل ${announcements.length} إعلان`);
                 displayAnnouncements(announcements);
                 displayHomeAnnouncements(announcements.slice(0, 2));
                 
             } catch (error) {
-                console.log('جارٍ تحميل الإعلانات...');
+                console.error('خطأ في تحميل الإعلانات:', error);
+                displayAnnouncements([]);
             }
         }
 
@@ -1022,13 +1039,12 @@
             
             let html = '';
             announcements.forEach(announcement => {
+                const date = announcement.date ? new Date(announcement.date).toLocaleDateString('ar-SA') : 'غير محدد';
                 html += `
                     <div class="announcement-card">
-                        <h3 class="announcement-title">${announcement.title}</h3>
-                        <div class="announcement-date">
-                            ${new Date(announcement.date).toLocaleDateString('ar-SA')}
-                        </div>
-                        <div class="announcement-content">${announcement.content}</div>
+                        <h3 class="announcement-title">${announcement.title || 'بدون عنوان'}</h3>
+                        <div class="announcement-date">${date}</div>
+                        <div class="announcement-content">${announcement.content || 'لا يوجد محتوى'}</div>
                     </div>
                 `;
             });
@@ -1046,13 +1062,12 @@
             
             let html = '';
             announcements.forEach(announcement => {
+                const date = announcement.date ? new Date(announcement.date).toLocaleDateString('ar-SA') : 'غير محدد';
                 html += `
                     <div class="announcement-card">
-                        <h3 class="announcement-title">${announcement.title}</h3>
-                        <div class="announcement-date">
-                            ${new Date(announcement.date).toLocaleDateString('ar-SA')}
-                        </div>
-                        <div class="announcement-content">${announcement.content}</div>
+                        <h3 class="announcement-title">${announcement.title || 'بدون عنوان'}</h3>
+                        <div class="announcement-date">${date}</div>
+                        <div class="announcement-content">${announcement.content || 'لا يوجد محتوى'}</div>
                     </div>
                 `;
             });
@@ -1062,6 +1077,7 @@
 
         async function loadLaws() {
             try {
+                console.log('جاري تحميل القوانين...');
                 const snapshot = await db.collection('laws')
                     .orderBy('number', 'asc')
                     .get();
@@ -1074,10 +1090,12 @@
                     });
                 });
                 
+                console.log(`تم تحميل ${laws.length} قانون`);
                 displayLaws(laws);
                 
             } catch (error) {
-                console.log('جارٍ تحميل القوانين...');
+                console.error('خطأ في تحميل القوانين:', error);
+                displayLaws([]);
             }
         }
 
@@ -1099,10 +1117,10 @@
                 html += `
                     <div class="law-item">
                         <div class="law-header" onclick="toggleLaw(this.parentElement)">
-                            المادة ${law.number}: ${law.title}
+                            المادة ${law.number || 'غير معروف'}: ${law.title || 'بدون عنوان'}
                         </div>
                         <div class="law-content">
-                            ${law.content}
+                            ${law.content || 'لا يوجد محتوى'}
                         </div>
                     </div>
                 `;
@@ -1113,6 +1131,7 @@
 
         async function loadTeam() {
             try {
+                console.log('جاري تحميل الطاقم...');
                 const snapshot = await db.collection('team')
                     .orderBy('name')
                     .get();
@@ -1125,10 +1144,12 @@
                     });
                 });
                 
+                console.log(`تم تحميل ${team.length} عضو`);
                 displayTeam(team);
                 
             } catch (error) {
-                console.log('جارٍ تحميل الطاقم...');
+                console.error('خطأ في تحميل الطاقم:', error);
+                displayTeam([]);
             }
         }
 
@@ -1149,9 +1170,9 @@
             team.forEach(member => {
                 html += `
                     <div class="team-card">
-                        <div class="team-avatar" style="background-image: url('${member.imageUrl}')"></div>
-                        <div class="team-name">${member.name}</div>
-                        <div class="team-role">${member.role}</div>
+                        <div class="team-avatar" style="background-image: url('${member.imageUrl || 'https://i.imgur.com/J6l19lO.jpg'}')"></div>
+                        <div class="team-name">${member.name || 'غير معروف'}</div>
+                        <div class="team-role">${member.role || 'بدون منصب'}</div>
                     </div>
                 `;
             });
@@ -1183,7 +1204,8 @@
                 displayAdminAnnouncements(announcements);
                 
             } catch (error) {
-                console.log('لا توجد إعلانات للإدارة');
+                console.error('خطأ في تحميل الإعلانات للإدارة:', error);
+                displayAdminAnnouncements([]);
             }
         }
 
@@ -1208,10 +1230,11 @@
             `;
             
             announcements.forEach(announcement => {
+                const date = announcement.date ? new Date(announcement.date).toLocaleDateString('ar-SA') : 'غير محدد';
                 html += `
                     <tr>
-                        <td>${new Date(announcement.date).toLocaleDateString('ar-SA')}</td>
-                        <td>${announcement.title}</td>
+                        <td>${date}</td>
+                        <td>${announcement.title || 'بدون عنوان'}</td>
                         <td>
                             <button class="action-btn delete-btn" onclick="deleteAnnouncement('${announcement.id}')">
                                 <i class="fas fa-trash"></i> حذف
@@ -1229,47 +1252,68 @@
             e.preventDefault();
             
             if (!isAdminLoggedIn) {
-                alert('يجب تسجيل الدخول أولاً');
+                showMessage('يجب تسجيل الدخول أولاً', 'error');
                 return;
             }
             
-            const title = document.getElementById('announcementTitle').value;
-            const content = document.getElementById('announcementContent').value;
+            const title = document.getElementById('announcementTitle').value.trim();
+            const content = document.getElementById('announcementContent').value.trim();
+            
+            if (!title || !content) {
+                showMessage('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
             
             try {
-                await db.collection('announcements').add({
+                console.log('جاري نشر الإعلان...');
+                
+                const announcementData = {
                     title: title,
                     content: content,
-                    date: new Date().toISOString()
-                });
+                    date: new Date().toISOString(),
+                    createdAt: new Date().toISOString()
+                };
                 
-                document.getElementById('announcementForm').reset();
+                // إضافة الإعلان إلى Firestore
+                await db.collection('announcements').add(announcementData);
+                
+                // تحديث العرض
                 await loadAnnouncements();
                 await loadAdminAnnouncements();
                 
-                alert('تم نشر الإعلان بنجاح');
+                // إعادة تعيين النموذج
+                document.getElementById('announcementForm').reset();
+                
+                showMessage('✅ تم نشر الإعلان بنجاح!', 'success');
+                console.log('تم نشر الإعلان بنجاح');
                 
             } catch (error) {
-                alert('حدث خطأ في نشر الإعلان');
+                console.error('خطأ في نشر الإعلان:', error);
+                showMessage('❌ حدث خطأ في نشر الإعلان. تأكد من اتصال قاعدة البيانات.', 'error');
             }
         }
 
         async function deleteAnnouncement(id) {
             if (!isAdminLoggedIn) {
-                alert('يجب تسجيل الدخول أولاً');
+                showMessage('يجب تسجيل الدخول أولاً', 'error');
                 return;
             }
             
             if (!confirm('هل أنت متأكد من حذف هذا الإعلان؟')) return;
             
             try {
+                console.log('جاري حذف الإعلان...');
                 await db.collection('announcements').doc(id).delete();
+                
                 await loadAnnouncements();
                 await loadAdminAnnouncements();
                 
-                alert('تم حذف الإعلان بنجاح');
+                showMessage('✅ تم حذف الإعلان بنجاح', 'success');
+                console.log('تم حذف الإعلان بنجاح');
+                
             } catch (error) {
-                alert('حدث خطأ في حذف الإعلان');
+                console.error('خطأ في حذف الإعلان:', error);
+                showMessage('❌ حدث خطأ في حذف الإعلان', 'error');
             }
         }
 
@@ -1290,7 +1334,8 @@
                 displayAdminLaws(laws);
                 
             } catch (error) {
-                console.log('لا توجد قوانين للإدارة');
+                console.error('خطأ في تحميل القوانين للإدارة:', error);
+                displayAdminLaws([]);
             }
         }
 
@@ -1317,8 +1362,8 @@
             laws.forEach(law => {
                 html += `
                     <tr>
-                        <td>${law.number}</td>
-                        <td>${law.title}</td>
+                        <td>${law.number || 'غير معروف'}</td>
+                        <td>${law.title || 'بدون عنوان'}</td>
                         <td>
                             <button class="action-btn delete-btn" onclick="deleteLaw('${law.id}')">
                                 <i class="fas fa-trash"></i> حذف
@@ -1336,49 +1381,65 @@
             e.preventDefault();
             
             if (!isAdminLoggedIn) {
-                alert('يجب تسجيل الدخول أولاً');
+                showMessage('يجب تسجيل الدخول أولاً', 'error');
                 return;
             }
             
             const number = parseInt(document.getElementById('lawNumber').value);
-            const title = document.getElementById('lawTitle').value;
-            const content = document.getElementById('lawContent').value;
+            const title = document.getElementById('lawTitle').value.trim();
+            const content = document.getElementById('lawContent').value.trim();
+            
+            if (!number || !title || !content) {
+                showMessage('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
             
             try {
-                await db.collection('laws').add({
+                console.log('جاري إضافة القانون...');
+                
+                const lawData = {
                     number: number,
                     title: title,
                     content: content,
                     createdAt: new Date().toISOString()
-                });
+                };
+                
+                await db.collection('laws').add(lawData);
                 
                 document.getElementById('lawForm').reset();
                 await loadLaws();
                 await loadAdminLaws();
                 
-                alert('تم إضافة القانون بنجاح');
+                showMessage('✅ تم إضافة القانون بنجاح!', 'success');
+                console.log('تم إضافة القانون بنجاح');
                 
             } catch (error) {
-                alert('حدث خطأ في إضافة القانون');
+                console.error('خطأ في إضافة القانون:', error);
+                showMessage('❌ حدث خطأ في إضافة القانون', 'error');
             }
         }
 
         async function deleteLaw(id) {
             if (!isAdminLoggedIn) {
-                alert('يجب تسجيل الدخول أولاً');
+                showMessage('يجب تسجيل الدخول أولاً', 'error');
                 return;
             }
             
             if (!confirm('هل أنت متأكد من حذف هذا القانون؟')) return;
             
             try {
+                console.log('جاري حذف القانون...');
                 await db.collection('laws').doc(id).delete();
+                
                 await loadLaws();
                 await loadAdminLaws();
                 
-                alert('تم حذف القانون بنجاح');
+                showMessage('✅ تم حذف القانون بنجاح', 'success');
+                console.log('تم حذف القانون بنجاح');
+                
             } catch (error) {
-                alert('حدث خطأ في حذف القانون');
+                console.error('خطأ في حذف القانون:', error);
+                showMessage('❌ حدث خطأ في حذف القانون', 'error');
             }
         }
 
@@ -1397,7 +1458,8 @@
                 displayAdminTeam(team);
                 
             } catch (error) {
-                console.log('لا يوجد طاقم للإدارة');
+                console.error('خطأ في تحميل الطاقم للإدارة:', error);
+                displayAdminTeam([]);
             }
         }
 
@@ -1424,8 +1486,8 @@
             team.forEach(member => {
                 html += `
                     <tr>
-                        <td>${member.name}</td>
-                        <td>${member.role}</td>
+                        <td>${member.name || 'غير معروف'}</td>
+                        <td>${member.role || 'بدون منصب'}</td>
                         <td>
                             <button class="action-btn delete-btn" onclick="deleteTeamMember('${member.id}')">
                                 <i class="fas fa-trash"></i> حذف
@@ -1443,49 +1505,65 @@
             e.preventDefault();
             
             if (!isAdminLoggedIn) {
-                alert('يجب تسجيل الدخول أولاً');
+                showMessage('يجب تسجيل الدخول أولاً', 'error');
                 return;
             }
             
-            const name = document.getElementById('memberName').value;
-            const role = document.getElementById('memberRole').value;
-            const imageUrl = document.getElementById('memberImageUrl').value || 'https://i.imgur.com/J6l19lO.jpg';
+            const name = document.getElementById('memberName').value.trim();
+            const role = document.getElementById('memberRole').value.trim();
+            const imageUrl = document.getElementById('memberImageUrl').value.trim() || 'https://i.imgur.com/J6l19lO.jpg';
+            
+            if (!name || !role) {
+                showMessage('يرجى ملء الاسم والمنصب', 'error');
+                return;
+            }
             
             try {
-                await db.collection('team').add({
+                console.log('جاري إضافة العضو...');
+                
+                const memberData = {
                     name: name,
                     role: role,
                     imageUrl: imageUrl,
                     createdAt: new Date().toISOString()
-                });
+                };
+                
+                await db.collection('team').add(memberData);
                 
                 document.getElementById('teamForm').reset();
                 await loadTeam();
                 await loadAdminTeam();
                 
-                alert('تم إضافة العضو بنجاح');
+                showMessage('✅ تم إضافة العضو بنجاح!', 'success');
+                console.log('تم إضافة العضو بنجاح');
                 
             } catch (error) {
-                alert('حدث خطأ في إضافة العضو');
+                console.error('خطأ في إضافة العضو:', error);
+                showMessage('❌ حدث خطأ في إضافة العضو', 'error');
             }
         }
 
         async function deleteTeamMember(id) {
             if (!isAdminLoggedIn) {
-                alert('يجب تسجيل الدخول أولاً');
+                showMessage('يجب تسجيل الدخول أولاً', 'error');
                 return;
             }
             
             if (!confirm('هل أنت متأكد من حذف هذا العضو؟')) return;
             
             try {
+                console.log('جاري حذف العضو...');
                 await db.collection('team').doc(id).delete();
+                
                 await loadTeam();
                 await loadAdminTeam();
                 
-                alert('تم حذف العضو بنجاح');
+                showMessage('✅ تم حذف العضو بنجاح', 'success');
+                console.log('تم حذف العضو بنجاح');
+                
             } catch (error) {
-                alert('حدث خطأ في حذف العضو');
+                console.error('خطأ في حذف العضو:', error);
+                showMessage('❌ حدث خطأ في حذف العضو', 'error');
             }
         }
 
@@ -1524,6 +1602,32 @@
             });
         }
 
+        // دالة لعرض الرسائل
+        function showMessage(message, type) {
+            // إنشاء عنصر الرسالة
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '20px';
+            messageDiv.style.right = '20px';
+            messageDiv.style.left = '20px';
+            messageDiv.style.zIndex = '1000';
+            messageDiv.style.display = 'block';
+            messageDiv.textContent = message;
+            
+            // إضافة الرسالة إلى الصفحة
+            document.body.appendChild(messageDiv);
+            
+            // إخفاء الرسالة بعد 5 ثواني
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                messageDiv.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    document.body.removeChild(messageDiv);
+                }, 500);
+            }, 5000);
+        }
+
         // معالجة نماذج التقديم
         async function handleApplySubmit(e) {
             e.preventDefault();
@@ -1540,20 +1644,13 @@
             };
             
             try {
-                // إرسال إلى Discord
                 await sendToDiscord('apply', data);
                 
-                document.getElementById('applySuccess').textContent = 'تم إرسال طلبك بنجاح!';
-                document.getElementById('applySuccess').style.display = 'block';
+                showMessage('✅ تم إرسال طلبك بنجاح!', 'success');
                 e.target.reset();
                 
-                setTimeout(() => {
-                    document.getElementById('applySuccess').style.display = 'none';
-                }, 5000);
-                
             } catch (error) {
-                document.getElementById('applyError').textContent = 'حدث خطأ في إرسال الطلب';
-                document.getElementById('applyError').style.display = 'block';
+                showMessage('❌ حدث خطأ في إرسال الطلب', 'error');
             }
         }
 
@@ -1575,17 +1672,11 @@
             try {
                 await sendToDiscord('case', data);
                 
-                document.getElementById('caseSuccess').textContent = 'تم إرسال طلبك بنجاح!';
-                document.getElementById('caseSuccess').style.display = 'block';
+                showMessage('✅ تم إرسال طلبك بنجاح!', 'success');
                 e.target.reset();
                 
-                setTimeout(() => {
-                    document.getElementById('caseSuccess').style.display = 'none';
-                }, 5000);
-                
             } catch (error) {
-                document.getElementById('caseError').textContent = 'حدث خطأ في إرسال الطلب';
-                document.getElementById('caseError').style.display = 'block';
+                showMessage('❌ حدث خطأ في إرسال الطلب', 'error');
             }
         }
 
@@ -1604,17 +1695,11 @@
             try {
                 await sendToDiscord('suggestion', data);
                 
-                document.getElementById('suggestionSuccess').textContent = 'تم إرسال اقتراحك بنجاح!';
-                document.getElementById('suggestionSuccess').style.display = 'block';
+                showMessage('✅ تم إرسال اقتراحك بنجاح!', 'success');
                 e.target.reset();
                 
-                setTimeout(() => {
-                    document.getElementById('suggestionSuccess').style.display = 'none';
-                }, 5000);
-                
             } catch (error) {
-                document.getElementById('suggestionError').textContent = 'حدث خطأ في إرسال الاقتراح';
-                document.getElementById('suggestionError').style.display = 'block';
+                showMessage('❌ حدث خطأ في إرسال الاقتراح', 'error');
             }
         }
 
@@ -1646,6 +1731,12 @@
                 console.log('تم إرسال البيانات بنجاح');
             }
         }
+
+        // دالة لتسجيل الأخطاء في الكونسول
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('حدث خطأ:', msg, '\nفي:', url, '\nالسطر:', lineNo, '\nالعمود:', columnNo, '\nالتفاصيل:', error);
+            return false;
+        };
     </script>
 </body>
 </html>
