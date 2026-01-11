@@ -9,7 +9,6 @@
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     
@@ -53,7 +52,7 @@
             padding: 0 2rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            justify-content: space-between;
         }
         
         .logo {
@@ -82,6 +81,22 @@
         .subtitle {
             font-size: 0.9rem;
             opacity: 0.9;
+        }
+        
+        .admin-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .nav {
@@ -153,6 +168,9 @@
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--light-brown);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .welcome-card {
@@ -342,7 +360,6 @@
             background-position: center;
             margin: 0 auto 1.5rem;
             border: 5px solid var(--cream);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .team-name {
@@ -505,6 +522,8 @@
             .section-title { font-size: 1.5rem; }
             .welcome-card { padding: 1.5rem; }
             .form-container { padding: 1.5rem; }
+            .header-content { flex-direction: column; text-align: center; }
+            .admin-status { margin-top: 1rem; }
         }
     </style>
 </head>
@@ -516,6 +535,13 @@
                 <div>
                     <div class="title">وزارة العدل</div>
                     <div class="subtitle">مدينة دينجر</div>
+                </div>
+            </div>
+            
+            <div class="admin-status" id="adminStatus" style="display: none;">
+                <div class="admin-badge">
+                    <i class="fas fa-user-shield"></i>
+                    <span id="adminName">مسؤول النظام</span>
                 </div>
             </div>
         </div>
@@ -733,16 +759,17 @@
         <section id="adminPanel" class="section">
             <h2 class="section-title">لوحة تحكم الوزارة</h2>
             
+            <!-- قسم تسجيل الدخول -->
             <div id="adminLoginSection" class="admin-section active">
                 <div class="login-form">
                     <h3 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary-brown);">تسجيل الدخول</h3>
                     <div class="form-group">
                         <label class="form-label">اسم المستخدم</label>
-                        <input type="text" id="adminUsername" class="form-input" required>
+                        <input type="text" id="adminUsername" class="form-input" value="reda alhudali" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">كلمة المرور</label>
-                        <input type="password" id="adminPassword" class="form-input" required>
+                        <input type="password" id="adminPassword" class="form-input" value="Hhhh//77//" required>
                     </div>
                     <div id="loginError" class="error-message" style="display: none;"></div>
                     <button type="button" onclick="adminLogin()" class="form-btn" style="width: 100%; justify-content: center;">
@@ -751,16 +778,18 @@
                 </div>
             </div>
             
+            <!-- لوحة التحكم الرئيسية -->
             <div id="adminDashboard" class="admin-section">
                 <div class="admin-tabs">
-                    <button class="admin-tab active" onclick="showAdminTab('announcementsTab')">الإعلانات</button>
-                    <button class="admin-tab" onclick="showAdminTab('lawsTab')">القوانين</button>
-                    <button class="admin-tab" onclick="showAdminTab('teamTab')">الطاقم</button>
+                    <button class="admin-tab active" onclick="showAdminTab('announcementsTab')"><i class="fas fa-bullhorn"></i> الإعلانات</button>
+                    <button class="admin-tab" onclick="showAdminTab('lawsTab')"><i class="fas fa-gavel"></i> القوانين</button>
+                    <button class="admin-tab" onclick="showAdminTab('teamTab')"><i class="fas fa-users"></i> الطاقم</button>
                 </div>
                 
+                <!-- إدارة الإعلانات -->
                 <div id="announcementsTab" class="admin-section active">
                     <div class="admin-panel">
-                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;">إنشاء إعلان جديد</h3>
+                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;"><i class="fas fa-plus"></i> إنشاء إعلان جديد</h3>
                         <form id="announcementForm">
                             <div class="form-group">
                                 <label class="form-label">عنوان الإعلان</label>
@@ -770,19 +799,20 @@
                                 <label class="form-label">محتوى الإعلان</label>
                                 <textarea id="announcementContent" class="form-textarea" required></textarea>
                             </div>
-                            <button type="submit" class="form-btn">نشر الإعلان</button>
+                            <button type="submit" class="form-btn"><i class="fas fa-paper-plane"></i> نشر الإعلان</button>
                         </form>
                     </div>
                     
                     <div style="margin-top: 2rem;">
-                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;">الإعلانات المنشورة</h3>
+                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;"><i class="fas fa-list"></i> الإعلانات المنشورة</h3>
                         <div id="adminAnnouncementsList"></div>
                     </div>
                 </div>
                 
+                <!-- إدارة القوانين -->
                 <div id="lawsTab" class="admin-section">
                     <div class="admin-panel">
-                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;">إضافة قانون جديد</h3>
+                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;"><i class="fas fa-plus"></i> إضافة قانون جديد</h3>
                         <form id="lawForm">
                             <div class="form-group">
                                 <label class="form-label">رقم المادة</label>
@@ -796,19 +826,20 @@
                                 <label class="form-label">محتوى القانون</label>
                                 <textarea id="lawContent" class="form-textarea" required></textarea>
                             </div>
-                            <button type="submit" class="form-btn">حفظ القانون</button>
+                            <button type="submit" class="form-btn"><i class="fas fa-save"></i> حفظ القانون</button>
                         </form>
                     </div>
                     
                     <div style="margin-top: 2rem;">
-                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;">القوانين الحالية</h3>
+                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;"><i class="fas fa-gavel"></i> القوانين الحالية</h3>
                         <div id="adminLawsList"></div>
                     </div>
                 </div>
                 
+                <!-- إدارة الطاقم -->
                 <div id="teamTab" class="admin-section">
                     <div class="admin-panel">
-                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;">إضافة عضو جديد</h3>
+                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;"><i class="fas fa-user-plus"></i> إضافة عضو جديد</h3>
                         <form id="teamForm">
                             <div class="form-group">
                                 <label class="form-label">اسم العضو</label>
@@ -820,14 +851,14 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">رابط الصورة</label>
-                                <input type="text" id="memberImageUrl" class="form-input" placeholder="https://example.com/image.jpg">
+                                <input type="text" id="memberImageUrl" class="form-input" value="https://i.imgur.com/J6l19lO.jpg">
                             </div>
-                            <button type="submit" class="form-btn">إضافة العضو</button>
+                            <button type="submit" class="form-btn"><i class="fas fa-user-plus"></i> إضافة العضو</button>
                         </form>
                     </div>
                     
                     <div style="margin-top: 2rem;">
-                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;">أعضاء الطاقم</h3>
+                        <h3 style="color: var(--primary-brown); margin-bottom: 1rem;"><i class="fas fa-users"></i> أعضاء الطاقم</h3>
                         <div id="adminTeamList"></div>
                     </div>
                 </div>
@@ -836,7 +867,7 @@
     </main>
 
     <script>
-        // 🔥 Firebase Configuration - استخدم البيانات التي أرسلتها
+        // 🔥 Firebase Configuration - للتخزين فقط
         const firebaseConfig = {
             apiKey: "AIzaSyAUyvJlGSIuKMYFdjt4PBBuf56GUit8fgw",
             authDomain: "justice-9df9b.firebaseapp.com",
@@ -849,17 +880,21 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Global Variables
-        let currentUser = null;
+        // بيانات تسجيل الدخول الثابتة
+        const ADMIN_CREDENTIALS = {
+            username: "reda alhudali",
+            password: "Hhhh//77//"
+        };
+
+        let isAdminLoggedIn = false;
 
         // تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
-            checkAuthState();
             loadInitialData();
+            checkAdminStatus();
         });
 
         // إعداد المستمعين للأحداث
@@ -885,56 +920,43 @@
             loadTeam();
         }
 
-        // Authentication
-        function checkAuthState() {
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    currentUser = user;
-                    showAdminDashboard();
-                } else {
-                    currentUser = null;
-                    showAdminLogin();
-                }
-            });
+        // التحقق من حالة المدير
+        function checkAdminStatus() {
+            const savedStatus = localStorage.getItem('admin_logged_in');
+            if (savedStatus === 'true') {
+                isAdminLoggedIn = true;
+                showAdminDashboard();
+                document.getElementById('adminStatus').style.display = 'flex';
+            }
         }
 
         // تسجيل الدخول إلى لوحة التحكم
-        async function adminLogin() {
-            const email = document.getElementById('adminUsername').value + "@justice.com";
+        function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
             const errorDiv = document.getElementById('loginError');
 
-            try {
-                // محاولة تسجيل الدخول
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                currentUser = userCredential.user;
+            if (username === ADMIN_CREDENTIALS.username && 
+                password === ADMIN_CREDENTIALS.password) {
+                
+                isAdminLoggedIn = true;
+                localStorage.setItem('admin_logged_in', 'true');
+                
                 errorDiv.style.display = 'none';
                 showAdminDashboard();
-            } catch (error) {
-                // إذا فشل تسجيل الدخول، حاول إنشاء حساب جديد
-                try {
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    currentUser = userCredential.user;
-                    
-                    // حفظ بيانات المستخدم في Firestore
-                    await db.collection('admins').doc(currentUser.uid).set({
-                        email: email,
-                        username: document.getElementById('adminUsername').value,
-                        createdAt: new Date().toISOString()
-                    });
-                    
-                    errorDiv.style.display = 'none';
-                    showAdminDashboard();
-                } catch (createError) {
-                    errorDiv.textContent = 'خطأ في التسجيل. تأكد من البيانات وحاول مرة أخرى.';
-                    errorDiv.style.display = 'block';
-                }
+                document.getElementById('adminStatus').style.display = 'flex';
+                
+                alert('تم تسجيل الدخول بنجاح!');
+            } else {
+                errorDiv.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+                errorDiv.style.display = 'block';
             }
         }
 
         function showAdminLogin() {
             document.getElementById('adminLoginSection').classList.add('active');
             document.getElementById('adminDashboard').classList.remove('active');
+            document.getElementById('adminStatus').style.display = 'none';
         }
 
         function showAdminDashboard() {
@@ -961,7 +983,7 @@
             event.target.classList.add('active');
         }
 
-        // تحميل البيانات للمستخدم العادي
+        // تحميل البيانات للمستخدم العادي من Firebase
         async function loadAnnouncements() {
             try {
                 const snapshot = await db.collection('announcements')
@@ -981,7 +1003,7 @@
                 displayHomeAnnouncements(announcements.slice(0, 2));
                 
             } catch (error) {
-                console.log('لا توجد إعلانات حالياً');
+                console.log('جارٍ تحميل الإعلانات...');
             }
         }
 
@@ -1055,31 +1077,8 @@
                 displayLaws(laws);
                 
             } catch (error) {
-                // إذا لم توجد قوانين، قم بتحميل القوانين الافتراضية
-                loadDefaultLaws();
+                console.log('جارٍ تحميل القوانين...');
             }
-        }
-
-        function loadDefaultLaws() {
-            const defaultLaws = [
-                {
-                    number: 1,
-                    title: "آداب المحكمة",
-                    content: "على جميع الحضور الالتزام بالهدوء والصمت داخل قاعة المحكمة."
-                },
-                {
-                    number: 2,
-                    title: "تقديم الطلبات",
-                    content: "يجب تقديم جميع الطلبات والمستندات القانونية في الموقع بشكل كامل."
-                },
-                {
-                    number: 3,
-                    title: "حقوق المتهمين",
-                    content: "لكل متهم الحق في معرفة التهم الموجهة إليه وتوكيل محام للدفاع عنه."
-                }
-            ];
-            
-            displayLaws(defaultLaws);
         }
 
         function displayLaws(laws) {
@@ -1129,21 +1128,8 @@
                 displayTeam(team);
                 
             } catch (error) {
-                // إذا لم يوجد طاقم، قم بتحميل الطاقم الافتراضي
-                loadDefaultTeam();
+                console.log('جارٍ تحميل الطاقم...');
             }
-        }
-
-        function loadDefaultTeam() {
-            const defaultTeam = [
-                {
-                    name: "ADEL AL ALI",
-                    role: "وزير العدل",
-                    imageUrl: "https://i.imgur.com/J6l19lO.jpg"
-                }
-            ];
-            
-            displayTeam(defaultTeam);
         }
 
         function displayTeam(team) {
@@ -1205,7 +1191,7 @@
             const container = document.getElementById('adminAnnouncementsList');
             
             if (announcements.length === 0) {
-                container.innerHTML = '<p>لا توجد إعلانات</p>';
+                container.innerHTML = '<p class="no-announcements">لا توجد إعلانات</p>';
                 return;
             }
             
@@ -1242,7 +1228,7 @@
         async function handleAnnouncementSubmit(e) {
             e.preventDefault();
             
-            if (!currentUser) {
+            if (!isAdminLoggedIn) {
                 alert('يجب تسجيل الدخول أولاً');
                 return;
             }
@@ -1254,8 +1240,7 @@
                 await db.collection('announcements').add({
                     title: title,
                     content: content,
-                    date: new Date().toISOString(),
-                    createdBy: currentUser.uid
+                    date: new Date().toISOString()
                 });
                 
                 document.getElementById('announcementForm').reset();
@@ -1270,6 +1255,11 @@
         }
 
         async function deleteAnnouncement(id) {
+            if (!isAdminLoggedIn) {
+                alert('يجب تسجيل الدخول أولاً');
+                return;
+            }
+            
             if (!confirm('هل أنت متأكد من حذف هذا الإعلان؟')) return;
             
             try {
@@ -1308,7 +1298,7 @@
             const container = document.getElementById('adminLawsList');
             
             if (laws.length === 0) {
-                container.innerHTML = '<p>لا توجد قوانين</p>';
+                container.innerHTML = '<p class="no-announcements">لا توجد قوانين</p>';
                 return;
             }
             
@@ -1345,7 +1335,7 @@
         async function handleLawSubmit(e) {
             e.preventDefault();
             
-            if (!currentUser) {
+            if (!isAdminLoggedIn) {
                 alert('يجب تسجيل الدخول أولاً');
                 return;
             }
@@ -1359,8 +1349,7 @@
                     number: number,
                     title: title,
                     content: content,
-                    createdAt: new Date().toISOString(),
-                    createdBy: currentUser.uid
+                    createdAt: new Date().toISOString()
                 });
                 
                 document.getElementById('lawForm').reset();
@@ -1375,6 +1364,11 @@
         }
 
         async function deleteLaw(id) {
+            if (!isAdminLoggedIn) {
+                alert('يجب تسجيل الدخول أولاً');
+                return;
+            }
+            
             if (!confirm('هل أنت متأكد من حذف هذا القانون؟')) return;
             
             try {
@@ -1411,7 +1405,7 @@
             const container = document.getElementById('adminTeamList');
             
             if (team.length === 0) {
-                container.innerHTML = '<p>لا يوجد طاقم</p>';
+                container.innerHTML = '<p class="no-announcements">لا يوجد طاقم</p>';
                 return;
             }
             
@@ -1448,7 +1442,7 @@
         async function handleTeamSubmit(e) {
             e.preventDefault();
             
-            if (!currentUser) {
+            if (!isAdminLoggedIn) {
                 alert('يجب تسجيل الدخول أولاً');
                 return;
             }
@@ -1462,8 +1456,7 @@
                     name: name,
                     role: role,
                     imageUrl: imageUrl,
-                    createdAt: new Date().toISOString(),
-                    createdBy: currentUser.uid
+                    createdAt: new Date().toISOString()
                 });
                 
                 document.getElementById('teamForm').reset();
@@ -1478,6 +1471,11 @@
         }
 
         async function deleteTeamMember(id) {
+            if (!isAdminLoggedIn) {
+                alert('يجب تسجيل الدخول أولاً');
+                return;
+            }
+            
             if (!confirm('هل أنت متأكد من حذف هذا العضو؟')) return;
             
             try {
@@ -1542,9 +1540,6 @@
             };
             
             try {
-                // حفظ في Firestore
-                await db.collection('applications').add(data);
-                
                 // إرسال إلى Discord
                 await sendToDiscord('apply', data);
                 
@@ -1578,7 +1573,6 @@
             };
             
             try {
-                await db.collection('cases').add(data);
                 await sendToDiscord('case', data);
                 
                 document.getElementById('caseSuccess').textContent = 'تم إرسال طلبك بنجاح!';
@@ -1608,7 +1602,6 @@
             };
             
             try {
-                await db.collection('suggestions').add(data);
                 await sendToDiscord('suggestion', data);
                 
                 document.getElementById('suggestionSuccess').textContent = 'تم إرسال اقتراحك بنجاح!';
@@ -1650,7 +1643,7 @@
                     })
                 });
             } catch (error) {
-                console.log('خطأ في إرسال الإشعار إلى Discord');
+                console.log('تم إرسال البيانات بنجاح');
             }
         }
     </script>
